@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Phantom Wallet Integration</title>
+    <script src="https://cdn.jsdelivr.net/npm/@solana/web3.js@1.30.2"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+           background-color: #111111;
+    background-image: linear-gradient(
+      32deg,
+      rgba(8, 8, 8, 0.74) 30px,
+      transparent
+    );
+    background-size: 60px 60px;
+    background-position: -5px -5px;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+             color: white;
+        }
+
+        h1, h2 {
+            color: #333;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 4px;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        input[type="text"] {
+            width: 100%;
+
+            padding: 10px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        #walletAddress {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #333;
+        }
+
+        div {
+            margin-top: 20px;
+        }
+
+        form {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        form button {
+            background-color: #DC3545;
+        }
+
+        form button:hover {
+            background-color: #c82333;
+        }
+    </style>
+    <script>
+        async function connectWallet() {
+            try {
+                const resp = await window.solana.connect();
+                document.getElementById("walletAddress").innerText = resp.publicKey.toString();
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        async function sendTransaction() {
+            try {
+                const connection = new solanaWeb3.Connection(solanaWeb3.clusterApiUrl('devnet'), 'confirmed');
+                const from = window.solana.publicKey;
+                const to = new solanaWeb3.PublicKey(document.getElementById("recipientAddress").value);
+                const amount = parseInt(document.getElementById("amount").value) * solanaWeb3.LAMPORTS_PER_SOL;
+
+                const transaction = new solanaWeb3.Transaction().add(
+                    solanaWeb3.SystemProgram.transfer({
+                        fromPubkey: from,
+                        toPubkey: to,
+                        lamports: amount,
+                    })
+                );
+
+                const { signature } = await window.solana.signAndSendTransaction(transaction);
+                await connection.confirmTransaction(signature);
+                alert("Transaction successful: " + signature);
+            } catch (err) {
+                console.error(err);
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>Connect to Phantom Wallet</h1>
+<button onclick="connectWallet()">Connect to Phantom Wallet</button>
+<h1>Solana Address</h1>
+<p id="walletAddress">Not connected</p>
+
+<h2>Send Solana</h2>
+<input type="text" id="recipientAddress" placeholder="Recipient Address"/>
+<input type="text" id="amount" placeholder="Amount"/>
+<button onclick="sendTransaction()">Send</button>
+
+<div>
+    <form th:action="@{/logout}" method="post">
+        <button type="submit">Logout</button>
+    </form>
+</div>
+</body>
+</html>

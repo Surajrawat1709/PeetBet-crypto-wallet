@@ -1,4 +1,4 @@
-# Spring Authentication with MetaMask
+# Creating a Telegram bot and Spring Authentication with Phantom
 The project shows how to create a telegram bot and implement asymmetric authentication with the Phantom extension in a Spring application.
 
 ## Login flow

@@ -49,7 +49,7 @@ PeetBetBot is a Telegram bot that facilitates betting games using PEET Coin. The
 **1) Clone the repository:**
 
 ```bash
-  git clone https://github.com/Surajrawat1709/Peetbetbot.git
+  git clone https://github.com/Surajrawat1709/PeetBet-crypto-wallet.git
   cd peetbetbot
 
 ```
